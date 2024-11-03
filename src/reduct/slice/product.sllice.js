@@ -3,14 +3,14 @@ import axios from "axios";
 
 const initialState = {
   isLoading: false,
-  category: [],
+  product: [],
   error: null,
 };
 
-export const getcategory = createAsyncThunk("category/get", async () => {
+export const getproduct = createAsyncThunk("product/get", async () => {
   try {
     const response = await axios.get(
-      "http://localhost:5000/api/v1/categories/list_categories"
+      "http://localhost:5000/api/v1/product/list_product"
     );
     console.log(response.data.data);
     return response.data.data;
@@ -19,21 +19,17 @@ export const getcategory = createAsyncThunk("category/get", async () => {
   }
 });
 
-
-
-
-const CategorySlice = createSlice({
-  name: "category",
+const productSlice = createSlice({
+  name: "product",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     console.log("Ferfyrbf", builder);
-    builder.addCase(getcategory.fulfilled, (state, action) => {
+    builder.addCase(getproduct.fulfilled, (state, action) => {
       console.log(state, "fewfhyeuh");
-      state.category = action.payload;
+      state.product = action.payload;
     });
   },
 });
-   
 
-export default CategorySlice.reducer;
+export default productSlice.reducer;

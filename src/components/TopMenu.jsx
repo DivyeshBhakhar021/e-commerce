@@ -6,7 +6,7 @@ import { getcategory } from "../reduct/slice/category.slice";
 const TopMenu = () => {
   const dispatch = useDispatch();
 
-  const category = useSelector((state) => state.categorydata);
+  const category = useSelector((state) => state.categorydata.category);
   console.log(category);
 
   useEffect(() => {
@@ -92,10 +92,11 @@ const TopMenu = () => {
               </ul>
             </li>
 
-            {category && category.length > 0 &&
+            {category &&
+              category.length > 0 &&
               category.map((v) => (
                 <li className="nav-item">
-                  <Link className="nav-link" key={v.id}>
+                  <Link className="nav-link" key={v.id} to="/category">
                     {v.category_name}
                   </Link>
                 </li>

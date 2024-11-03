@@ -1,5 +1,7 @@
 import React, { lazy, Component } from "react";
 import { data } from "../../data";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { getproduct } from "../../reduct/slice/product.sllice";
 const Paging = lazy(() => import("../../components/Paging"));
 const Breadcrumb = lazy(() => import("../../components/Breadcrumb"));
 const FilterCategory = lazy(() => import("../../components/filter/Category"));
@@ -18,6 +20,9 @@ const CardProductList = lazy(() =>
 );
 
 class ProductListView extends Component {
+
+  
+
   state = {
     currentProducts: [],
     currentPage: null,
@@ -52,6 +57,8 @@ class ProductListView extends Component {
     products = products.concat(products);
     return products;
   };
+
+  
 
   render() {
     return (
@@ -163,5 +170,7 @@ class ProductListView extends Component {
     );
   }
 }
+
+
 
 export default ProductListView;

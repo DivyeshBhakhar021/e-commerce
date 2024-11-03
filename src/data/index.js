@@ -85,7 +85,7 @@ export const data = {
       cssClass: "text-primary",
     },
   ],
-  products: [
+  products: [ 
     {
       id: 1,
       sku: "FAS-01",
@@ -111,8 +111,8 @@ export const data = {
       img: "../../images/products/tshirt_grey_480x400.webp",
       price: 475,
       originPrice: 0,
-      discountPrice: 0,
-      discountPercentage: 0,
+      originPrice: 0,
+      discountPercentage: 0, // img,originPrice,discountPercentage,isNew,isHot,star,isFreeShipping
       isNew: false,
       isHot: true,
       star: 3,
