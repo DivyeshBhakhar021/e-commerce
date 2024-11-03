@@ -1,6 +1,18 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getcategory } from "../reduct/slice/category.slice";
 
 const TopMenu = () => {
+  const dispatch = useDispatch();
+
+  const category = useSelector((state) => state.categorydata);
+  console.log(category);
+
+  useEffect(() => {
+    dispatch(getcategory());
+  }, [dispatch]);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0">
       <div className="container-fluid">
@@ -79,36 +91,15 @@ const TopMenu = () => {
                 </li>
               </ul>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/category">
-                Fashion
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/category">
-                Supermarket
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/category">
-                Electronics
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/category">
-                Furniture
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/category">
-                Garden & Outdoors
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/category">
-                Jewellery
-              </Link>
-            </li>
+
+            {category && category.length > 0 &&
+              category.map((v) => (
+                <li className="nav-item">
+                  <Link className="nav-link" key={v.id}>
+                    {v.category_name}
+                  </Link>
+                </li>
+              ))}
             <li className="nav-item">
               <Link className="nav-link" to="/documentation">
                 Documentation
