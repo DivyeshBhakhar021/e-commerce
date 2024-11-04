@@ -1,13 +1,21 @@
 import { lazy } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+
+
 const CouponApplyForm = lazy(() =>
   import("../../components/others/CouponApplyForm")
 );
 
-const CartView = () => {
+
+
+const CartView = (v) => {
   const onSubmitApplyCouponCode = async (values) => {
     alert(JSON.stringify(values));
+
   };
+
+  
+
   return (
     <div>
       <div className="bg-secondary border-top p-4 text-white mb-3">

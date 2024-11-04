@@ -1,7 +1,8 @@
 import React, { lazy, Component } from "react";
 import { data } from "../../data";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { getproduct } from "../../reduct/slice/product.sllice";
+// import { getproductlist } from "../../reduct/slice/product.sllice";
+
 const Paging = lazy(() => import("../../components/Paging"));
 const Breadcrumb = lazy(() => import("../../components/Breadcrumb"));
 const FilterCategory = lazy(() => import("../../components/filter/Category"));
@@ -19,9 +20,12 @@ const CardProductList = lazy(() =>
   import("../../components/card/CardProductList")
 );
 
+
 class ProductListView extends Component {
 
-  
+  // componentDidMount(){
+  //   this.props.getproductlist();
+  // }
 
   state = {
     currentProducts: [],
@@ -61,6 +65,9 @@ class ProductListView extends Component {
   
 
   render() {
+    //  const { product } = this.props; 
+
+    //  console.log(product);
     return (
       <React.Fragment>
         <div
@@ -81,7 +88,7 @@ class ProductListView extends Component {
             <div className="col-md-3">
               <FilterCategory />
               <FilterPrice />
-              <FilterSize />
+              <FilterSize /> 
               <FilterStar />
               <FilterColor />
               <FilterClear />
