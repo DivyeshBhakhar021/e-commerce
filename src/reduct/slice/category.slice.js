@@ -27,7 +27,6 @@ const CategorySlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    console.log("Ferfyrbf", builder);
     builder.addCase(getcategory.fulfilled, (state, action) => {
       console.log(state, "fewfhyeuh");
       state.category = action.payload;

@@ -1,7 +1,8 @@
 import React, { lazy, Component } from "react";
 import { data } from "../../data";
 import { connect, useDispatch, useSelector } from "react-redux";
-// import { getproductlist } from "../../reduct/slice/product.sllice";
+import { getproductlist } from "../../reduct/slice/productlist.slice";
+// import {  getproductlist } from "../../reduct/slice/product.sllice";
 
 const Paging = lazy(() => import("../../components/Paging"));
 const Breadcrumb = lazy(() => import("../../components/Breadcrumb"));
@@ -22,11 +23,6 @@ const CardProductList = lazy(() =>
 
 
 class ProductListView extends Component {
-
-  // componentDidMount(){
-  //   this.props.getproductlist();
-  // }
-
   state = {
     currentProducts: [],
     currentPage: null,
@@ -34,6 +30,11 @@ class ProductListView extends Component {
     totalItems: 0,
     view: "list",
   };
+
+  componentDidMount() {
+    //  const dispatch = useDispatch();
+    this.props.dispatch(getproductlist());
+  }
 
   UNSAFE_componentWillMount() {
     const totalItems = this.getProducts().length;
@@ -62,12 +63,10 @@ class ProductListView extends Component {
     return products;
   };
 
-  
-
   render() {
-    //  const { product } = this.props; 
+    const { productlist } = this.props;
 
-    //  console.log(product);
+     console.log(productlist);
     return (
       <React.Fragment>
         <div
@@ -88,7 +87,7 @@ class ProductListView extends Component {
             <div className="col-md-3">
               <FilterCategory />
               <FilterPrice />
-              <FilterSize /> 
+              <FilterSize />
               <FilterStar />
               <FilterColor />
               <FilterClear />
@@ -148,7 +147,7 @@ class ProductListView extends Component {
                   this.state.currentProducts.map((product, idx) => {
                     return (
                       <div key={idx} className="col-md-4">
-                        <CardProductGrid data={product} />
+                        <CardProductGrid data={productlist} />
                       </div>
                     );
                   })}
@@ -156,7 +155,7 @@ class ProductListView extends Component {
                   this.state.currentProducts.map((product, idx) => {
                     return (
                       <div key={idx} className="col-md-12">
-                        <CardProductList data={product} />
+                        <CardProductList data={productlist} />
                       </div>
                     );
                   })}
@@ -178,6 +177,15 @@ class ProductListView extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+
+  console.log(state)
+ return {
+   productlist: state.productlist.product,
+ }; };
+
+// Connecting the component to the Redux store
+export default connect(mapStateToProps)(ProductListView);
 
 
-export default ProductListView;
+// export default ProductListView;
