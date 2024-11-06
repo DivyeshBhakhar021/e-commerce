@@ -21,7 +21,6 @@ const CardProductList = lazy(() =>
   import("../../components/card/CardProductList")
 );
 
-
 class ProductListView extends Component {
   state = {
     currentProducts: [],
@@ -29,44 +28,50 @@ class ProductListView extends Component {
     totalPages: null,
     totalItems: 0,
     view: "list",
+    productlist: [],
   };
 
   componentDidMount() {
     //  const dispatch = useDispatch();
     this.props.dispatch(getproductlist());
+    this.setState({ productlist: this.props.productlist });
   }
 
-  UNSAFE_componentWillMount() {
-    const totalItems = this.getProducts().length;
-    this.setState({ totalItems });
+  componentDidUpdate(prevProps) {
+    // Check if the productlist prop has changed
+    if (prevProps.productlist !== this.props.productlist) {
+      this.setState({ productlist: this.props.productlist }); // Update local state
+    }
   }
+
+  // UNSAFE_componentWillMount() {
+  //   const totalItems = this.getProducts().length;
+  //   this.setState({ totalItems });
+  // }
 
   onPageChanged = (page) => {
-    let products = this.getProducts();
-    const { currentPage, totalPages, pageLimit } = page;
-    const offset = (currentPage - 1) * pageLimit;
-    const currentProducts = products.slice(offset, offset + pageLimit);
-    this.setState({ currentPage, currentProducts, totalPages });
+    console.log(page.currentPage);
+    const currentPage = page.currentPage;
+    const totalPages = page.totalPages;
+    const totalItems = page.totalItems;
+    this.setState({ currentPage, totalItems, totalPages });
   };
 
   onChangeView = (view) => {
     this.setState({ view });
   };
 
-  getProducts = () => {
-    let products = data.products;
-    products = products.concat(products);
-    products = products.concat(products);
-    products = products.concat(products);
-    products = products.concat(products);
-    products = products.concat(products);
-    return products;
-  };
+ 
 
   render() {
-    const { productlist } = this.props;
+    const { view, productlist } = this.props;
 
-     console.log(productlist);
+    console.log(productlist);
+    // console.log(this.state.productlist.map((v) => v.pageSize));
+
+    // productlist[0].map((data) => console.log(data));
+    // console.log("cbsdsdh");
+    //      console.log(this.state.data);
     return (
       <React.Fragment>
         <div
@@ -86,7 +91,7 @@ class ProductListView extends Component {
           <div className="row">
             <div className="col-md-3">
               <FilterCategory />
-              <FilterPrice />
+              <FilterPrice productlist={this.state.productlist} />
               <FilterSize />
               <FilterStar />
               <FilterColor />
@@ -98,7 +103,7 @@ class ProductListView extends Component {
               <div className="row">
                 <div className="col-7">
                   <span className="align-middle fw-bold">
-                    {this.state.totalItems} results for{" "}
+                    {productlist[1].totalItems} results for{" "}
                     <span className="text-warning">"t-shirts"</span>
                   </span>
                 </div>
@@ -144,26 +149,26 @@ class ProductListView extends Component {
               <hr />
               <div className="row g-3">
                 {this.state.view === "grid" &&
-                  this.state.currentProducts.map((product, idx) => {
+                  this.state.productlist.map((product, idx) => {
                     return (
                       <div key={idx} className="col-md-4">
-                        <CardProductGrid data={productlist} />
+                        <CardProductGrid data={product} />
                       </div>
                     );
                   })}
                 {this.state.view === "list" &&
-                  this.state.currentProducts.map((product, idx) => {
+                  this.state.productlist.map((product, idx) => {
                     return (
                       <div key={idx} className="col-md-12">
-                        <CardProductList data={productlist} />
+                        <CardProductList data={product} />
                       </div>
                     );
                   })}
               </div>
               <hr />
               <Paging
-                totalRecords={this.state.totalItems}
-                pageLimit={9}
+                totalRecords={productlist[1].totalItems}
+                pageLimit={productlist[1].totalPages}
                 pageNeighbours={3}
                 onPageChanged={this.onPageChanged}
                 sizing=""
@@ -178,14 +183,10 @@ class ProductListView extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    productlist: state.productlist.product,
+  };
+};
 
-  console.log(state)
- return {
-   productlist: state.productlist.product,
- }; };
-
-// Connecting the component to the Redux store
 export default connect(mapStateToProps)(ProductListView);
-
-
-// export default ProductListView;

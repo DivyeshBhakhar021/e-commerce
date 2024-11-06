@@ -8,6 +8,8 @@ import { getproductlist } from "../../reduct/slice/productlist.slice";
 const CardProductList = (props) => {
   const product = props.data;
   console.log(product);  
+
+  // product.map((v)=>console.log(v))
   
  const dispatch = useDispatch();
    const handleCart = (item) => {
