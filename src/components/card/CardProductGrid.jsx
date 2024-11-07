@@ -2,9 +2,15 @@ import { Link } from "react-router-dom";
 
 const CardProductGrid = (props) => {
   const product = props.data;
+
+  console.log(product)
   return (
     <div className="card">
-      <img src={product.img} className="card-img-top" alt="..." />
+      <img
+        src={`/images/products/${product.img}`}
+        className="card-img-top"
+        alt="..."
+      />
       {product.isNew && (
         <span className="badge bg-success position-absolute mt-2 ms-2">
           New
@@ -29,17 +35,20 @@ const CardProductGrid = (props) => {
       )}
       <div className="card-body">
         <h6 className="card-subtitle mb-2">
-          <Link to={product.link} className="text-decoration-none">
-            {product.name}
+          <Link
+            to={`/product/detail/${product.id}`}
+            className="text-decoration-none"
+          >
+            {product.product_name}
           </Link>
         </h6>
         <div className="my-2">
-          <span className="fw-bold h5">${product.price}</span>
+          <span className="fw-bold h5">${product.product_price}</span>
           {product.originPrice > 0 && (
             <del className="small text-muted ms-2">${product.originPrice}</del>
           )}
           <span className="ms-2">
-            {Array.from({ length: product.star }, (_, key) => (
+            {Array.from({ length: product.rating }, (_, key) => (
               <i className="bi bi-star-fill text-warning me-1" key={key} />
             ))}
           </span>

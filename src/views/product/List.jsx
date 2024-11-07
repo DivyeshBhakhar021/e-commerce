@@ -23,8 +23,8 @@ const CardProductList = lazy(() =>
 
 class ProductListView extends Component {
   state = {
-    currentProducts: [],
-    currentPage: null,
+    // currentProducts: [],
+    currentPage: 1,
     totalPages: null,
     totalItems: 0,
     view: "list",
@@ -32,8 +32,7 @@ class ProductListView extends Component {
   };
 
   componentDidMount() {
-    //  const dispatch = useDispatch();
-    this.props.dispatch(getproductlist());
+    this.props.dispatch(getproductlist(this.state.currentPage));
     this.setState({ productlist: this.props.productlist });
   }
 
@@ -44,34 +43,59 @@ class ProductListView extends Component {
     }
   }
 
-  // UNSAFE_componentWillMount() {
-  //   const totalItems = this.getProducts().length;
-  //   this.setState({ totalItems });
-  // }
-
   onPageChanged = (page) => {
     console.log(page.currentPage);
     const currentPage = page.currentPage;
     const totalPages = page.totalPages;
-    const totalItems = page.totalItems;
-    this.setState({ currentPage, totalItems, totalPages });
+    // const totalItems = page.totalItems;
+    this.setState({ currentPage, totalPages });
+    this.props.dispatch(getproductlist(page.currentPage));
   };
 
   onChangeView = (view) => {
     this.setState({ view });
   };
 
- 
+  handleSortChange = (value) => {
+    console.log(value.target.value);
+    const selectedValue = value.target.value;
+
+    const data = this.state.productlist[0].map((v)=>v)
+    let sortedProducts = data;
+
+
+    switch (selectedValue) {
+      case "1":
+        //  sortedProducts.sort((a, b) => b.popularity - a.popularity);
+        break;
+      case "2":
+        //  sortedProducts.sort(
+        //    (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+        //  );
+        break;
+      case "3":
+        //  sortedProducts.sort((a, b) => b.trendScore - a.trendScore);
+        break;
+      case "4":
+        sortedProducts.sort((a, b) => a.product_price - b.product_price);
+        break;
+      case "5":
+        sortedProducts.sort((a, b) => b.product_price - a.product_price);
+        break;
+      default:
+        break;
+    }
+    console.log(sortedProducts);
+
+    this.setState({ productlist: sortedProducts });
+  };
 
   render() {
-    const { view, productlist } = this.props;
+     const { view, productlist } = this.props;
 
-    console.log(productlist);
-    // console.log(this.state.productlist.map((v) => v.pageSize));
+    console.log(this.state);
 
-    // productlist[0].map((data) => console.log(data));
-    // console.log("cbsdsdh");
-    //      console.log(this.state.data);
+   
     return (
       <React.Fragment>
         <div
@@ -91,7 +115,7 @@ class ProductListView extends Component {
           <div className="row">
             <div className="col-md-3">
               <FilterCategory />
-              <FilterPrice productlist={this.state.productlist} />
+              <FilterPrice />
               <FilterSize />
               <FilterStar />
               <FilterColor />
@@ -103,20 +127,21 @@ class ProductListView extends Component {
               <div className="row">
                 <div className="col-7">
                   <span className="align-middle fw-bold">
-                    {productlist[1].totalItems} results for{" "}
+                    {this.state.productlist[1]?.totalItems} results for
                     <span className="text-warning">"t-shirts"</span>
                   </span>
                 </div>
                 <div className="col-5 d-flex justify-content-end">
                   <select
                     className="form-select mw-180 float-start"
-                    aria-label="Default select"
+                    aria-label="select"
+                    onChange={this.handleSortChange}
                   >
                     <option value={1}>Most Popular</option>
                     <option value={2}>Latest items</option>
                     <option value={3}>Trending</option>
                     <option value={4}>Price low to high</option>
-                    <option value={4}>Price high to low</option>
+                    <option value={5}>Price high to low</option>
                   </select>
                   <div className="btn-group ms-3" role="group">
                     <button
@@ -148,8 +173,24 @@ class ProductListView extends Component {
               </div>
               <hr />
               <div className="row g-3">
-                {this.state.view === "grid" &&
-                  this.state.productlist.map((product, idx) => {
+                {Array.isArray(this.state.productlist[0]) &&
+                  this.state.productlist[0].length > 0 &&
+                  this.state.view === "grid" &&
+                  this.state.productlist[0].map((product, idx) => (
+                    <div key={product.id || idx} className="col-md-4">
+                      <CardProductGrid data={product} />
+                    </div>
+                  ))}
+                {Array.isArray(this.state.productlist[0]) &&
+                  this.state.productlist[0].length > 0 &&
+                  this.state.view === "list" &&
+                  this.state.productlist[0].map((product, idx) => (
+                    <div key={product.id || idx} className="col-md-12">
+                      <CardProductList data={product} />
+                    </div>
+                  ))}
+                {/* {this.state.view === "grid" &&
+                  this.state.productlist[0]?.map((product, idx) => {
                     return (
                       <div key={idx} className="col-md-4">
                         <CardProductGrid data={product} />
@@ -157,18 +198,18 @@ class ProductListView extends Component {
                     );
                   })}
                 {this.state.view === "list" &&
-                  this.state.productlist.map((product, idx) => {
+                  this.state.productlist[0]?.map((product, idx) => {
                     return (
                       <div key={idx} className="col-md-12">
                         <CardProductList data={product} />
                       </div>
                     );
-                  })}
+                  })} */}
               </div>
               <hr />
               <Paging
-                totalRecords={productlist[1].totalItems}
-                pageLimit={productlist[1].totalPages}
+                totalRecords={productlist[1]?.totalItems}
+                pageLimit={productlist[1]?.totalPages}
                 pageNeighbours={3}
                 onPageChanged={this.onPageChanged}
                 sizing=""

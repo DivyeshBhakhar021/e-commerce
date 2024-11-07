@@ -9,12 +9,12 @@ const initialState = {
 
 
 
-export const getproductlist = createAsyncThunk("productlist/get", async () => {
-    console.log("disdeuj");
+export const getproductlist = createAsyncThunk("productlist/get", async (page) => {
+    console.log("disdeuj",page);
     
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/v1/product/getprodct?page=1&pageSize=10`
+      `http://localhost:5000/api/v1/product/getprodct?page=${page}&pageSize=10`
     );
     console.log(response.data.data);
     return response.data.data;
@@ -28,9 +28,13 @@ const productlisteSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getproductlist.fulfilled, (state, action) => {
+    builder
+    .addCase(getproductlist.fulfilled, (state, action) => {
       state.product = action.payload;
-    });
+    })
+    .addCase(getproductlist.rejected, (state, action) => {
+            console.error('Failed to fetch product list:', action.error);
+          })
   },
 });
 
