@@ -23,18 +23,29 @@ export const getproductlist = createAsyncThunk("productlist/get", async (page) =
   }
 });
 
+
+export const filterdata = createAsyncThunk("productfilter/post",async (data) => {
+  try {
+    console.log(data)
+    
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 const productlisteSlice = createSlice({
   name: "productlist",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(getproductlist.fulfilled, (state, action) => {
-      state.product = action.payload;
-    })
-    .addCase(getproductlist.rejected, (state, action) => {
-            console.error('Failed to fetch product list:', action.error);
-          })
+      .addCase(getproductlist.fulfilled, (state, action) => {
+        console.log(state)
+        state.productlist = action.payload;
+      })
+      .addCase(filterdata.fulfilled, (state,action)=>{
+state.productlist = action.payload;
+      });
   },
 });
 

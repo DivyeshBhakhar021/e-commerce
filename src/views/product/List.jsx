@@ -1,7 +1,7 @@
 import React, { lazy, Component } from "react";
 import { data } from "../../data";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { getproductlist } from "../../reduct/slice/productlist.slice";
+import { filterdata, getproductlist } from "../../reduct/slice/productlist.slice";
 // import {  getproductlist } from "../../reduct/slice/product.sllice";
 
 const Paging = lazy(() => import("../../components/Paging"));
@@ -22,14 +22,20 @@ const CardProductList = lazy(() =>
 );
 
 class ProductListView extends Component {
-  state = {
-    // currentProducts: [],
-    currentPage: 1,
-    totalPages: null,
-    totalItems: 0,
-    view: "list",
-    productlist: [],
-  };
+  constructor(props) {
+    super(props); 
+      this.state = {
+      currentPage: 1,
+      totalPages: null,
+      totalItems: 0,
+      view: "list",
+      productlist: [],
+    };
+        
+    this.onPageChanged = this.onPageChanged.bind(this);
+    this.onChangeView = this.onChangeView.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
+  }
 
   componentDidMount() {
     this.props.dispatch(getproductlist(this.state.currentPage));
@@ -37,9 +43,8 @@ class ProductListView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Check if the productlist prop has changed
     if (prevProps.productlist !== this.props.productlist) {
-      this.setState({ productlist: this.props.productlist }); // Update local state
+      this.setState({ productlist: this.props.productlist }); 
     }
   }
 
@@ -58,44 +63,47 @@ class ProductListView extends Component {
 
   handleSortChange = (value) => {
     console.log(value.target.value);
-    const selectedValue = value.target.value;
-
-    const data = this.state.productlist[0].map((v)=>v)
-    let sortedProducts = data;
+    this.props.dispatch(filterdata(value.target.value));
 
 
-    switch (selectedValue) {
-      case "1":
-        //  sortedProducts.sort((a, b) => b.popularity - a.popularity);
-        break;
-      case "2":
-        //  sortedProducts.sort(
-        //    (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
-        //  );
-        break;
-      case "3":
-        //  sortedProducts.sort((a, b) => b.trendScore - a.trendScore);
-        break;
-      case "4":
-        sortedProducts.sort((a, b) => a.product_price - b.product_price);
-        break;
-      case "5":
-        sortedProducts.sort((a, b) => b.product_price - a.product_price);
-        break;
-      default:
-        break;
-    }
-    console.log(sortedProducts);
+    // const selectedValue = value.target.value;
 
-    this.setState({ productlist: sortedProducts });
+    // const data = this.state.productlist[0]?.map((v) => v)
+    //   ? this.state.productlist[0]?.map((v) => v)
+    //   : this.state.productlist?.map((v) => v);
+    // let sortedProducts = data;
+
+    // switch (selectedValue) {
+    //   case "1":
+    //     //  sortedProducts.sort((a, b) => b.popularity - a.popularity);
+    //     break;
+    //   case "2":
+    //     //  sortedProducts.sort(
+    //     //    (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+    //     //  );
+    //     break;
+    //   case "3":
+    //     //  sortedProducts.sort((a, b) => b.trendScore - a.trendScore);
+    //     break;
+    //   case "4":
+    //     sortedProducts.sort((a, b) => a.product_price - b.product_price);
+    //     break;
+    //   case "5":
+    //     sortedProducts.sort((a, b) => b.product_price - a.product_price);
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // console.log(sortedProducts);
+
+    // this.setState({ productlist: [sortedProducts] });
   };
 
   render() {
-     const { view, productlist } = this.props;
+    const { view, productlist } = this.props;
 
-    console.log(this.state);
+    console.log(this.state.productlist);
 
-   
     return (
       <React.Fragment>
         <div
@@ -140,8 +148,8 @@ class ProductListView extends Component {
                     <option value={1}>Most Popular</option>
                     <option value={2}>Latest items</option>
                     <option value={3}>Trending</option>
-                    <option value={4}>Price low to high</option>
-                    <option value={5}>Price high to low</option>
+                    <option value="lh">Price low to high</option>
+                    <option value="hl">Price high to low</option>
                   </select>
                   <div className="btn-group ms-3" role="group">
                     <button
@@ -189,22 +197,6 @@ class ProductListView extends Component {
                       <CardProductList data={product} />
                     </div>
                   ))}
-                {/* {this.state.view === "grid" &&
-                  this.state.productlist[0]?.map((product, idx) => {
-                    return (
-                      <div key={idx} className="col-md-4">
-                        <CardProductGrid data={product} />
-                      </div>
-                    );
-                  })}
-                {this.state.view === "list" &&
-                  this.state.productlist[0]?.map((product, idx) => {
-                    return (
-                      <div key={idx} className="col-md-12">
-                        <CardProductList data={product} />
-                      </div>
-                    );
-                  })} */}
               </div>
               <hr />
               <Paging
@@ -226,7 +218,7 @@ class ProductListView extends Component {
 const mapStateToProps = (state) => {
   console.log(state);
   return {
-    productlist: state.productlist.product,
+    productlist: state.productlist.productlist,
   };
 };
 
